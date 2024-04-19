@@ -26,13 +26,13 @@ func main() {
 
 	router := http.NewServeMux()
 
-	router.HandleFunc("/", routers.Index)
 	router.HandleFunc("/api/v1/get_random_link", func(w http.ResponseWriter, r *http.Request) {
 		routers.GetRandLink(w, r, domain_name)
 	})
 	router.HandleFunc("/api/v1/get_link", func(w http.ResponseWriter, r *http.Request) {
-		routers.GetRandLink(w, r, domain_name)
+		routers.GetLink(w, r, domain_name)
 	})
+	router.HandleFunc("/", routers.Index)
 
 	server := http.Server{
 		Addr:    addr,

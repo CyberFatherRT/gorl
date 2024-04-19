@@ -1,12 +1,19 @@
 FROM golang:1.22.2-bookworm AS builder
+LABEL maintainer="CyberFatherRT"
+
 WORKDIR /app
 
-COPY . .
-RUN go build -o gorl main.go
+COPY go.mod go.sum ./
+RUN go mod download
 
-FROM scratch AS final
+COPY main.go .
+COPY pkg pkg
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o gorl .
+
+FROM busybox:1.36.1-uclibc AS final
 WORKDIR /app
 
+COPY index.html .
 COPY --from=builder /app/gorl gorl
 
-ENTRYPOINT ["/app/gorl"]
+ENTRYPOINT ["./gorl"]

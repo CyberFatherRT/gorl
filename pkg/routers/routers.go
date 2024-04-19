@@ -18,8 +18,14 @@ type Request struct {
 
 var HttpRegex *regexp.Regexp
 
+func GetLink(w http.ResponseWriter, r *http.Request, domain_name string) {
+
+}
+
 func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
 	var request Request
+
+	log.Printf("Get request from: %s", r.URL)
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
@@ -43,6 +49,8 @@ func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
+
+		fmt.Println(r.URL)
 
 		name := strings.TrimPrefix(r.URL.Path, "/")
 		link, err := db.DB.GetLink(name)
