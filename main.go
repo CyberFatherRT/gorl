@@ -1,22 +1,23 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	util "gorl/pkg"
 	db "gorl/pkg/db"
+	routers "gorl/pkg/routers"
 	"log"
 	"net/http"
-	"os"
-	"strings"
+	"regexp"
 )
 
-type Request struct {
-	Link string `json:"link"`
-}
-
 func init() {
+	var err error
 	db.Init()
+	routers.HttpRegex, err = regexp.Compile(`https?:\/\/[a-zA-Z0-9%]*:?[a-zA-Z0-9%]*\/?[(a-z).\/?]*\/?[^\s]+\.[^\s]{2,}\/?.*`)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -25,43 +26,12 @@ func main() {
 
 	router := http.NewServeMux()
 
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println(r.URL)
-
-		if r.URL.Path != "/" {
-			name := strings.TrimPrefix(r.URL.Path, "/")
-			link, err := db.DB.GetLink(name)
-
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			http.Redirect(w, r, link, 301)
-			return
-		}
-
-		html, _ := os.ReadFile("index.html")
-		fmt.Fprintf(w, string(html))
+	router.HandleFunc("/", routers.Index)
+	router.HandleFunc("/api/v1/get_random_link", func(w http.ResponseWriter, r *http.Request) {
+		routers.GetRandLink(w, r, domain_name)
 	})
-
 	router.HandleFunc("/api/v1/get_link", func(w http.ResponseWriter, r *http.Request) {
-		var request Request
-
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		link, err := db.DB.GenLink(request.Link)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		w.Header().Add("Content-Type", "application/json")
-		fmt.Fprintf(w, "{\"link\": \"%s/%s\"}", domain_name, link)
+		routers.GetRandLink(w, r, domain_name)
 	})
 
 	server := http.Server{

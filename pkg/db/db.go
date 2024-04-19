@@ -11,7 +11,7 @@ import (
 
 type DataBase struct {
 	db      *sql.DB
-	GenLink func(link string) (string, error)
+	GenLink func(name, link string) (string, error)
 	GetLink func(link string) (string, error)
 }
 
@@ -57,6 +57,7 @@ func ensureRunned() {
 }
 
 func getLink(name string) (string, error) {
+	var link string
 	query := `SELECT link FROM url WHERE name = $1`
 
 	result, err := DB.db.Query(query, name)
@@ -66,17 +67,15 @@ func getLink(name string) (string, error) {
 	}
 
 	if !result.Next() {
-		return "", fmt.Errorf("Not link with that name")
+		return "", fmt.Errorf("No link with that name")
 	}
+	DB.db.Exec("UPDATE url SET times = times + 1 WHERE name = $1", name)
 
-	var link string
 	result.Scan(&link)
-
 	return link, nil
 }
 
-func generateLink(link string) (string, error) {
-	name := util.RandStringRunes(5)
+func generateLink(name, link string) (string, error) {
 	query := `INSERT INTO url VALUES ($1, $2)`
 
 	_, err := DB.db.Exec(query, name, link)

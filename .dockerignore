@@ -1,0 +1,9 @@
+volumes
+build
+.git
+
+LICENSE
+Makefile
+README.md
+.env*
+
