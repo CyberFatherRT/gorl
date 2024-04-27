@@ -10,9 +10,11 @@ COPY main.go .
 COPY pkg pkg
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o gorl .
 
+
 FROM busybox:1.36.1-uclibc AS final
 WORKDIR /app
 
+COPY assets assets
 COPY index.html .
 COPY --from=builder /app/gorl gorl
 
