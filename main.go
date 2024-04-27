@@ -24,8 +24,10 @@ func main() {
 	addr := fmt.Sprintf("%s", util.GetEnv("ADDR"))
 	domain_name := util.GetEnv("DOMAIN")
 
+	fs := http.FileServer(http.Dir("./assets"))
 	router := http.NewServeMux()
 
+	router.Handle("/assets/", http.StripPrefix("/assets/", fs))
 	router.HandleFunc("/api/v1/get_random_link", func(w http.ResponseWriter, r *http.Request) {
 		routers.GetRandLink(w, r, domain_name)
 	})

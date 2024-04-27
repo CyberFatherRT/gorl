@@ -50,8 +50,6 @@ func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
 func Index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 
-		fmt.Println(r.URL)
-
 		name := strings.TrimPrefix(r.URL.Path, "/")
 		link, err := db.DB.GetLink(name)
 
