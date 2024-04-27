@@ -6,7 +6,7 @@ services:
         env_file: .env
         environment:
             - ADDR=0.0.0.0:8000
-            - DOMAIN=https://ly.cfrt.sh
+            - DOMAIN=ly.cfrt.sh
         depends_on:
             - postgres
 
