@@ -19,10 +19,11 @@ type Request struct {
 var HttpRegex *regexp.Regexp
 
 func GetLink(w http.ResponseWriter, r *http.Request, domain_name string) {
-
+	log.Printf("INFO: url := %s", r.URL)
 }
 
 func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
+	log.Printf("INFO: url := %s", r.URL)
 	var request Request
 
 	log.Printf("Get request from: %s", r.URL)
@@ -48,6 +49,7 @@ func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
+	log.Printf("INFO: url := %s", r.URL)
 	if r.URL.Path != "/" {
 
 		name := strings.TrimPrefix(r.URL.Path, "/")

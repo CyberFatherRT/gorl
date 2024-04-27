@@ -1,22 +1,20 @@
 version: "3"
 
 services:
-  gorl:
-    build: .
-    env_file: .env
-    environment:
-      - ADDR=0.0.0.0:8000
-      - DOMAIN=https://ly.cfrt.sh
-    ports:
-      - "80:8000"
-    depends_on:
-      - postgres
+    gorl:
+        build: .
+        env_file: .env
+        environment:
+            - ADDR=0.0.0.0:8000
+            - DOMAIN=https://ly.cfrt.sh
+        depends_on:
+            - postgres
 
-  postgres:
-    image: postgres:alpine3.19
-    env_file: .env_db
-    volumes:
-      - "./volume/db:/var/lib/postgresql/data"
+    postgres:
+        image: postgres:alpine3.19
+        env_file: .env_db
+        volumes:
+            - ./volume/db:/var/lib/postgresql/data
 
 volumes:
-  db:
+    db:
