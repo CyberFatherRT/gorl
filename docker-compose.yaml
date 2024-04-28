@@ -7,6 +7,8 @@ services:
         environment:
             - ADDR=0.0.0.0:8000
             - DOMAIN=ly.cfrt.sh
+        ports:
+            - "80:8000"
         depends_on:
             - postgres
 
