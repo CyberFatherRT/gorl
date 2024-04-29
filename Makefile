@@ -1,6 +1,6 @@
-gorl: pkg/**/*.go main.go
+build/gorl: main.go
 	@mkdir -p build
-	go build -o build/gorl main.go
+	go build -o $@ $^
 
 run: main.go build/gorl
 	./build/gorl
