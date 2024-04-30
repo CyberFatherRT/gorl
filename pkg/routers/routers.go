@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 )
 
 type Request struct {
@@ -24,14 +23,11 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
-	log.Printf("INFO: url := %s", r.URL)
 	var request Request
-
-	log.Printf("Get request from: %s", r.URL)
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 
@@ -39,7 +35,7 @@ func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "You must supply valid http link", http.StatusBadRequest)
 	}
 
-	link, err := db.DB.GenLink(RandStringRunes(5), request.Link)
+	link, err := db.DB.GenLink(RandString(5), request.Link)
 
 	if err != nil {
 		log.Fatal(err)
@@ -50,21 +46,17 @@ func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	log.Printf("INFO: url := %s", r.URL)
-	if r.URL.Path != "/" {
+	http.ServeFile(w, r, "index.html")
+}
 
-		name := strings.TrimPrefix(r.URL.Path, "/")
-		link, err := db.DB.GetLink(name)
+func HandleRedirect(w http.ResponseWriter, r *http.Request) {
+	name := r.PathValue("name")
+	link, err := db.DB.GetLink(name)
 
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		http.Redirect(w, r, link, http.StatusMovedPermanently)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	html, _ := os.ReadFile("index.html")
-	fmt.Fprintf(w, string(html))
+	http.Redirect(w, r, link, http.StatusMovedPermanently)
 }

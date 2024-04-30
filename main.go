@@ -26,11 +26,12 @@ func main() {
 	router := http.NewServeMux()
 
 	fs := http.FileServer(http.Dir("./assets"))
-	router.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	router.Handle("GET /assets/", http.StripPrefix("/assets/", fs))
 
-	router.HandleFunc("/api/v1/create_random_link", routers.CreateRandomLink)
-	router.HandleFunc("/api/v1/create_link", routers.CreateLink)
-	router.HandleFunc("/", routers.Index)
+	router.HandleFunc("POST /api/v1/create_random_link", routers.CreateRandomLink)
+	router.HandleFunc("POST /api/v1/create_link", routers.CreateLink)
+	router.HandleFunc("GET /{name}", routers.HandleRedirect)
+	router.HandleFunc("GET /", routers.Index)
 
 	server := http.Server{
 		Addr:    addr,
