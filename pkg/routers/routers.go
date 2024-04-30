@@ -7,7 +7,6 @@ import (
 	"gorl/pkg/db"
 	"log"
 	"net/http"
-	"os"
 	"regexp"
 )
 
@@ -45,10 +44,6 @@ func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "{\"link\": \"%s/%s\"}", DomainName, link)
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
-}
-
 func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	name := r.PathValue("name")
 	link, err := db.DB.GetLink(name)
@@ -59,4 +54,8 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, link, http.StatusMovedPermanently)
+}
+
+func Index(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
 }

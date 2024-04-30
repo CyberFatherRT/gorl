@@ -3,6 +3,7 @@ package main
 import (
 	util "gorl/pkg"
 	db "gorl/pkg/db"
+	"gorl/pkg/middleware"
 	routers "gorl/pkg/routers"
 	"log"
 	"net/http"
@@ -30,14 +31,19 @@ func main() {
 
 	router.HandleFunc("POST /api/v1/create_random_link", routers.CreateRandomLink)
 	router.HandleFunc("POST /api/v1/create_link", routers.CreateLink)
+
 	router.HandleFunc("GET /{name}", routers.HandleRedirect)
 	router.HandleFunc("GET /", routers.Index)
 
+	stack := middleware.CreateStack(
+		middleware.Logging,
+	)
+
 	server := http.Server{
 		Addr:    addr,
-		Handler: router,
+		Handler: stack(router),
 	}
 
 	log.Printf("INFO: Starting server on %s", addr)
-	log.Println(server.ListenAndServe())
+	server.ListenAndServe()
 }
