@@ -1,7 +1,7 @@
 const regex = /https?:\/\/[a-zA-Z0-9%]*:?[a-zA-Z0-9%]*\/?[(a-z).\/?]*\/?[^\s]+\.[^\s]{2,}\/?.*/;
 
-async function get_random_link(link) {
-    return await fetch("/api/v1/get_random_link", {
+async function create_random_link(link) {
+    return await fetch("/api/v1/create_random_link", {
         method: "POST",
         body: JSON.stringify({
             link: link,
@@ -15,10 +15,10 @@ async function shorten() {
 
     let link = enter_input.value;
     if (!regex.test(link)) {
-        alert("Entered url is not valid");
+        alert("Entered url is not valid!");
         return;
     }
 
-    let result = await get_random_link(link);
+    let result = await create_random_link(link);
     link_input.value = result.link;
 }

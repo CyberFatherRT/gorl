@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	util "gorl/pkg"
 	db "gorl/pkg/db"
 	routers "gorl/pkg/routers"
@@ -13,6 +12,8 @@ import (
 func init() {
 	var err error
 	db.Init()
+
+	routers.DomainName = util.GetEnv("DOMAIN")
 	routers.HttpRegex, err = regexp.Compile(`https?:\/\/[a-zA-Z0-9%]*:?[a-zA-Z0-9%]*\/?[(a-z).\/?]*\/?[^\s]+\.[^\s]{2,}\/?.*`)
 
 	if err != nil {
@@ -21,19 +22,14 @@ func init() {
 }
 
 func main() {
-	addr := fmt.Sprintf("%s", util.GetEnv("ADDR"))
-	domain_name := util.GetEnv("DOMAIN")
-
-	fs := http.FileServer(http.Dir("./assets"))
+	addr := util.GetEnv("ADDR")
 	router := http.NewServeMux()
 
+	fs := http.FileServer(http.Dir("./assets"))
 	router.Handle("/assets/", http.StripPrefix("/assets/", fs))
-	router.HandleFunc("/api/v1/get_random_link", func(w http.ResponseWriter, r *http.Request) {
-		routers.GetRandLink(w, r, domain_name)
-	})
-	router.HandleFunc("/api/v1/get_link", func(w http.ResponseWriter, r *http.Request) {
-		routers.GetLink(w, r, domain_name)
-	})
+
+	router.HandleFunc("/api/v1/create_random_link", routers.CreateRandomLink)
+	router.HandleFunc("/api/v1/create_link", routers.CreateLink)
 	router.HandleFunc("/", routers.Index)
 
 	server := http.Server{

@@ -17,12 +17,13 @@ type Request struct {
 }
 
 var HttpRegex *regexp.Regexp
+var DomainName string
 
-func GetLink(w http.ResponseWriter, r *http.Request, domain_name string) {
+func CreateLink(w http.ResponseWriter, r *http.Request) {
 	log.Printf("INFO: url := %s", r.URL)
 }
 
-func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
+func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 	log.Printf("INFO: url := %s", r.URL)
 	var request Request
 
@@ -45,7 +46,7 @@ func GetRandLink(w http.ResponseWriter, r *http.Request, domain_name string) {
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	fmt.Fprintf(w, "{\"link\": \"%s/%s\"}", domain_name, link)
+	fmt.Fprintf(w, "{\"link\": \"%s/%s\"}", DomainName, link)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
