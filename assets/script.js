@@ -4,7 +4,7 @@ async function create_random_link(link) {
     return await fetch("/api/v1/create_random_link", {
         method: "POST",
         body: JSON.stringify({
-            link: link,
+            long_link: link,
         }),
     }).then((res) => res.json());
 }
@@ -20,5 +20,5 @@ async function shorten() {
     }
 
     let result = await create_random_link(link);
-    link_input.value = result.link;
+    link_input.value = result.short_link;
 }

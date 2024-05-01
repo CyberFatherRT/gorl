@@ -15,7 +15,7 @@ FROM busybox:1.36.1-uclibc AS final
 WORKDIR /app
 
 COPY assets assets
-COPY index.html .
+COPY static static
 COPY --from=builder /app/gorl gorl
 
 ENTRYPOINT ["./gorl"]

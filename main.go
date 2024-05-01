@@ -26,14 +26,15 @@ func main() {
 	addr := util.GetEnv("ADDR")
 	router := http.NewServeMux()
 
-	fs := http.FileServer(http.Dir("./assets"))
-	router.Handle("GET /assets/", http.StripPrefix("/assets/", fs))
+	assets := http.FileServer(http.Dir("assets"))
+	router.Handle("GET /assets/", http.StripPrefix("/assets/", assets))
 
-	router.HandleFunc("POST /api/v1/create_random_link", routers.CreateRandomLink)
-	router.HandleFunc("POST /api/v1/create_link", routers.CreateLink)
-
-	router.HandleFunc("GET /{name}", routers.HandleRedirect)
 	router.HandleFunc("GET /", routers.Index)
+	router.HandleFunc("GET /admin", routers.Admin)
+	router.HandleFunc("GET /{name}", routers.HandleRedirect)
+
+	router.HandleFunc("POST /api/v1/create_link", routers.CreateLink)
+	router.HandleFunc("POST /api/v1/create_random_link", routers.CreateRandomLink)
 
 	stack := middleware.CreateStack(
 		middleware.Logging,

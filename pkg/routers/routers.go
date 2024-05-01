@@ -11,7 +11,7 @@ import (
 )
 
 type Request struct {
-	Link string `json:"link"`
+	Link string `json:"long_link"`
 }
 
 var HttpRegex *regexp.Regexp
@@ -34,14 +34,14 @@ func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "You must supply valid http link", http.StatusBadRequest)
 	}
 
-	link, err := db.DB.GenLink(RandString(5), request.Link)
+	link, err := db.DB.GenLink(RandString(4), request.Link)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	fmt.Fprintf(w, "{\"link\": \"%s/%s\"}", DomainName, link)
+	fmt.Fprintf(w, "{\"short_link\": \"%s/%s\"}", DomainName, link)
 }
 
 func HandleRedirect(w http.ResponseWriter, r *http.Request) {
@@ -54,8 +54,4 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, link, http.StatusMovedPermanently)
-}
-
-func Index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
 }
