@@ -38,6 +38,7 @@ func main() {
 
 	stack := middleware.CreateStack(
 		middleware.Logging,
+		middleware.Authentication,
 	)
 
 	server := http.Server{
