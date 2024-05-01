@@ -4,9 +4,13 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"time"
+
+	"github.com/golang-jwt/jwt"
 )
 
 var letterRunes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+var JWTsecret []byte
 
 func RandString(n int) string {
 	b := make([]byte, n)
@@ -14,6 +18,22 @@ func RandString(n int) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func SignedJwt(username string) (string, error) {
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["exp"] = time.Now().Add(time.Hour).UnixMilli()
+	claims["authorized"] = true
+	claims["username"] = username
+
+	tokenString, err := token.SignedString(JWTsecret)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 }
 
 func GetEnv(key string) string {

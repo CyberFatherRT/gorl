@@ -10,23 +10,23 @@ import (
 	"regexp"
 )
 
-type Request struct {
+type LinkRequest struct {
 	Link string `json:"long_link"`
 }
 
 var HttpRegex *regexp.Regexp
 var DomainName string
 
-func CreateLink(w http.ResponseWriter, r *http.Request) {
+func CreateLinkRouter(w http.ResponseWriter, r *http.Request) {
 	log.Printf("INFO: url := %s", r.URL)
 }
 
-func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
-	var request Request
+func GenerateRandomLinkRouter(w http.ResponseWriter, r *http.Request) {
+	var request LinkRequest
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		http.Error(w, "", http.StatusBadRequest)
+		http.Error(w, "Failed parsing Request", http.StatusBadRequest)
 		return
 	}
 
@@ -34,7 +34,7 @@ func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "You must supply valid http link", http.StatusBadRequest)
 	}
 
-	link, err := db.DB.GenLink(RandString(4), request.Link)
+	link, err := db.GenerateRandomLink(RandString(4), request.Link)
 
 	if err != nil {
 		log.Fatal(err)
@@ -42,16 +42,4 @@ func CreateRandomLink(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	fmt.Fprintf(w, "{\"short_link\": \"%s/%s\"}", DomainName, link)
-}
-
-func HandleRedirect(w http.ResponseWriter, r *http.Request) {
-	name := r.PathValue("name")
-	link, err := db.DB.GetLink(name)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	http.Redirect(w, r, link, http.StatusMovedPermanently)
 }

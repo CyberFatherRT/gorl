@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/matthewhartstonge/argon2"
 	util "gorl/pkg"
 	db "gorl/pkg/db"
 	"gorl/pkg/middleware"
@@ -13,6 +14,9 @@ import (
 func init() {
 	var err error
 	db.Init()
+	db.Argon2 = argon2.DefaultConfig()
+
+	util.JWTsecret = []byte(util.GetEnv("JWTSECRET"))
 
 	routers.DomainName = util.GetEnv("DOMAIN")
 	routers.HttpRegex, err = regexp.Compile(`https?:\/\/[a-zA-Z0-9%]*:?[a-zA-Z0-9%]*\/?[(a-z).\/?]*\/?[^\s]+\.[^\s]{2,}\/?.*`)
@@ -33,8 +37,10 @@ func main() {
 	router.HandleFunc("GET /admin", routers.Admin)
 	router.HandleFunc("GET /{name}", routers.HandleRedirect)
 
-	router.HandleFunc("POST /api/v1/create_link", routers.CreateLink)
-	router.HandleFunc("POST /api/v1/create_random_link", routers.CreateRandomLink)
+	router.HandleFunc("POST /api/v1/create_link", routers.CreateLinkRouter)
+	router.HandleFunc("POST /api/v1/create_random_link", routers.GenerateRandomLinkRouter)
+
+	router.HandleFunc("POST /api/v1/create_user", routers.CreateUserRouter)
 
 	stack := middleware.CreateStack(
 		middleware.Logging,
