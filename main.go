@@ -19,7 +19,7 @@ func init() {
 	util.JWTsecret = []byte(util.GetEnv("JWTSECRET"))
 
 	routers.DomainName = util.GetEnv("DOMAIN")
-	routers.HttpRegex, err = regexp.Compile(`https?:\/\/[a-zA-Z0-9%]*:?[a-zA-Z0-9%]*\/?[(a-z).\/?]*\/?[^\s]+\.[^\s]{2,}\/?.*`)
+	routers.HttpRegex, err = regexp.Compile(`https?://[a-zA-Z0-9%]*:?[a-zA-Z0-9%]*/?[(a-z)./?]*/?\S+\.\S{2,}/?.*`)
 
 	if err != nil {
 		log.Fatal(err)

@@ -8,10 +8,10 @@ import (
 var Argon2 argon2.Config
 
 func CreateUser(username, password string, isAdmin bool) error {
-	query := "INSERT INTO users(username, password, isAdmin) VALUES ($1, $2, $3)"
-	hashed_password, _ := Argon2.HashEncoded([]byte(password))
+	query := "INSERT INTO users(username, password, is_admin) VALUES ($1, $2, $3)"
+	hashedPassword, _ := Argon2.HashEncoded([]byte(password))
 
-	_, err := DB.Query(query, username, hashed_password, isAdmin)
+	_, err := DB.Query(query, username, hashedPassword, isAdmin)
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func CreateUser(username, password string, isAdmin bool) error {
 }
 
 func UpdatePassword(id int, password string) error {
-	query := "UPDATE url SET password = $1 WHERE id = $2"
+	query := "UPDATE users SET password = $1 WHERE id = $2"
 
 	_, err := DB.Query(query, password, id)
 	if err != nil {
@@ -35,7 +35,7 @@ func UpdatePassword(id int, password string) error {
 }
 
 func UpdateAdminUser(id int, isAdmin bool) error {
-	query := "UPDATE url SET isadmin = $1 WHERE id = $2"
+	query := "UPDATE users SET is_admin = $1 WHERE id = $2"
 
 	_, err := DB.Query(query, isAdmin, id)
 	if err != nil {

@@ -17,9 +17,7 @@ type LinkRequest struct {
 var HttpRegex *regexp.Regexp
 var DomainName string
 
-func CreateLinkRouter(w http.ResponseWriter, r *http.Request) {
-	log.Printf("INFO: url := %s", r.URL)
-}
+func CreateLinkRouter(w http.ResponseWriter, r *http.Request) {}
 
 func GenerateRandomLinkRouter(w http.ResponseWriter, r *http.Request) {
 	var request LinkRequest

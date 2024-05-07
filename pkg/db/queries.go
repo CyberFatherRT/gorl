@@ -1,7 +1,6 @@
 package db
 
 const scheme = `
-
 CREATE TABLE IF NOT EXISTS url (
     name CHAR(4),
     link TEXT NOT NULL,
@@ -15,9 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
-    isadmin BOOLEAN DEFAULT False,
+    is_admin BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id),
     UNIQUE (username)
 );
-
 `
