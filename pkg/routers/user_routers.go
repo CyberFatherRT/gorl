@@ -28,7 +28,7 @@ func CreateUserRouter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := util.SignedJwt(request.Username)
+	token, err := util.SignedJwt(request.Username, request.IsAdmin)
 	if err != nil {
 		http.Error(w, "Failed to create JWT token", http.StatusInternalServerError)
 		return

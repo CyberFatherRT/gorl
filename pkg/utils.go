@@ -20,13 +20,14 @@ func RandString(n int) string {
 	return string(b)
 }
 
-func SignedJwt(username string) (string, error) {
+func SignedJwt(username string, isAdmin bool) (string, error) {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["exp"] = time.Now().Add(time.Hour).UnixMilli()
 	claims["authorized"] = true
 	claims["username"] = username
+	claims["isAdmin"] = isAdmin
 
 	tokenString, err := token.SignedString(JWTsecret)
 	if err != nil {

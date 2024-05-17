@@ -17,6 +17,10 @@ func HandleRedirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, link, http.StatusMovedPermanently)
 }
 
+func Handle401(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "static/401.html")
+}
+
 func Handle403(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/403.html")
 }
