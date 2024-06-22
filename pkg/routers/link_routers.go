@@ -39,5 +39,5 @@ func GenerateRandomLinkRouter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-    fmt.Fprintf(w, "{\"short_link\": \"%s/%s\"}", DomainName, link) //TODO: convert to json from hashmap
+	fmt.Fprintf(w, "{\"short_link\": \"%s/%s\"}", DomainName, link) //TODO: convert to json from hashmap
 }

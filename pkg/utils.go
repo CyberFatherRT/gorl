@@ -38,8 +38,8 @@ func SignedJwt(username string, isAdmin bool) (string, error) {
 }
 
 func GetEnv(key string) string {
-	variable := os.Getenv(key)
-	if len(variable) == 0 {
+	variable, exists := os.LookupEnv(key)
+	if !exists {
 		log.Fatalf("ERROR: %s envirnment variable not set.", key)
 	}
 	return variable
